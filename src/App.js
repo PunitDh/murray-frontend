@@ -3,25 +3,30 @@ import { getProducts } from "./api/products";
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import Product from './components/Product';
-import { signIn, getToken } from "./api/auth";
+import { signIn, signUp, getToken, signOut } from "./api/auth";
 import Header from "./components/Header";
 import SignInForm from "./components/SignInForm";
+import SignUpForm from "./components/SignUpForm";
 import ProductList from "./components/ProductList";
 
 function App() {
   const [token, setToken] = useState(getToken());
   const [products, setProducts] = useState(null);
-  const [flash, setFlash] = useState();
+  const [flash, setFlash] = useState('');
   const signedIn = !!token;
   const requireAuth = render => props => (signedIn ? render(props) : <Redirect to="/signin" />);
-  const handleSignin = ({email, password}) => signIn(email, password)
-    .then(token => setToken(token))
-    .catch(error => setFlash("Unable to log in at this time"));
+  const handleSignIn = ({email, password}) => signIn(email, password)
+    .then(token => {setToken(token); setFlash('Signed in successfully');})
+    .catch(error => {console.dir({error}); setFlash("Unable to log in.");});
+  const handleSignUp = (email,password) => {
+    signUp(email, password)
+      .then(token => { setToken(token) })
+      .catch(error => { console.log({error}) })
+  }
 
   useEffect(() => {
-
     getProducts().then(products => setProducts(products)).catch(()=> setProducts([]));
-    
+    return (() => { console.log('componentWillUnmount') })
   }, [token]);
 
   return (
@@ -32,8 +37,14 @@ function App() {
           { flash && <div>{flash}</div> }
         <Switch>
           <Route path="/signin" render={() => (signedIn ? ( <Redirect to="/products" /> ) : (
-            <SignInForm onSignIn={handleSignin} />
+            <SignInForm onSignIn={handleSignIn} />
           )) } />
+
+          <Route path="/signup" render={() => (signedIn ? ( <Redirect to="/products" />) : (<SignUpForm onSignUp={handleSignUp} />))} />
+
+          <Route path="/signout" render={() => {
+            signOut().then(() => setToken());
+          }} />
 
           {
             products && (
@@ -44,7 +55,6 @@ function App() {
           }
 
           {
-            
               <Route path="/products" render={requireAuth(() => (
                 <ProductList products={products} />
               ))} />
@@ -81,7 +91,7 @@ function App() {
 //     }
 //   }
 
-//   handleSignin = ({email, password}) => {
+//   handleSignIn = ({email, password}) => {
 //     signIn(email, password).then((token) => this.setState({token: token}))
 //   }
 
@@ -96,7 +106,7 @@ function App() {
 //           <main>
 //           <Switch>
 //             <Route path="/signin" render={() => (signedIn ? ( <Redirect to="/products" /> ) : (
-//               <SignInForm onSignIn={this.handleSignin} />
+//               <SignInForm onSignIn={this.handleSignIn} />
 //             )) } />
 
 //             {
