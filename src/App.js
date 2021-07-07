@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import SignInForm from "./components/SignInForm";
 import SignUpForm from "./components/SignUpForm";
 import ProductList from "./components/ProductList";
+require('dotenv').config();
 
 function App() {
   const [token, setToken] = useState(getToken());

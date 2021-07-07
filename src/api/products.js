@@ -1,7 +1,7 @@
 import { getToken } from "./auth";
 
 export function getProducts() {
-    const url = 'http://localhost:3010/products';
+    const url = `${REACT_APP_URL}/products`;
     console.log(getToken());
     return fetch(url, { headers: {
          'Accept': 'application/json',
@@ -16,7 +16,7 @@ export function getProducts() {
 
 export function getProduct(id) {
     
-    const url = `http://localhost:3010/products/${id}`;
+    const url = `${REACT_APP_URL}/products/${id}`;
     return fetch(url, { headers: { 'Accept' : 'application/json' } })
         .then(resp => {
             if (resp.ok) return resp.json();
