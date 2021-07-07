@@ -1,9 +1,9 @@
 const TOKEN_KEY = 'session_token';
 
-export const API_URL = process.env.REACT_APP_API_URL;
+const REACT_APP_URL = process.env.REACT_APP_URL;
 
 export function signIn(email, password) {
-    const url = `http://localhost:3010/users/sign_in`;
+    const url = `${REACT_APP_URL}/users/sign_in`;
     
     return fetch(url, {
         method: 'POST',
@@ -31,7 +31,7 @@ export function signIn(email, password) {
 }
 
 export function signUp(email, password) {
-    const url = `http://localhost:3010/users/`;
+    const url = `${REACT_APP_URL}/users/`;
 
     return fetch(url, {
         method: 'POST',
@@ -53,7 +53,7 @@ export function signUp(email, password) {
 }
 
 export function signOut() {
-    const url = `http://localhost:3010/users/sign_out`;
+    const url = `${REACT_APP_URL}/users/sign_out`;
     
     return fetch(url, {
         method: 'DELETE',

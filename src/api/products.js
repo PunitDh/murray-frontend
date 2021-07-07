@@ -1,5 +1,7 @@
 import { getToken } from "./auth";
 
+const REACT_APP_URL = process.env.REACT_APP_URL;
+
 export function getProducts() {
     const url = `${REACT_APP_URL}/products`;
     console.log(getToken());
